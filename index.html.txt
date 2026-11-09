@@ -1,0 +1,134 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101114">
+  <meta name="description" content="MATE TUBE brings video, music, short entertainment, news, games and useful links together.">
+  <title>MATE TUBE — Watch, Listen, Play</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#home" aria-label="MATE TUBE home"><span class="brand-mark">M</span> MATE TUBE</a>
+    <form class="search-form" id="searchForm" role="search">
+      <label class="sr-only" for="globalSearch">Search MATE TUBE</label>
+      <input id="globalSearch" type="search" placeholder="Search videos, music, news, games…" autocomplete="off">
+      <button type="submit" aria-label="Search">⌕</button>
+    </form>
+    <button class="profile-shortcut" type="button" data-tab="me" aria-label="Open account">☺</button>
+  </header>
+
+  <div class="app-layout">
+    <aside class="sidebar" aria-label="Main navigation">
+      <nav class="side-nav" id="sideNav">
+        <button class="nav-button active" data-tab="home"><span>⌂</span>Home</button>
+        <button class="nav-button" data-tab="songs"><span>♫</span>Songs</button>
+        <button class="nav-button" data-tab="entertainment"><span>▶</span>Entertainment</button>
+        <button class="nav-button" data-tab="news"><span>▤</span>News</button>
+        <button class="nav-button" data-tab="games"><span>♧</span>Games</button>
+        <button class="nav-button" data-tab="pinned"><span>★</span>Pinned sites</button>
+        <button class="nav-button" data-tab="me"><span>☺</span>My account</button>
+      </nav>
+      <div class="sidebar-note">One place for things to watch, hear, read and play.</div>
+    </aside>
+
+    <main id="mainContent">
+      <div class="welcome-banner">
+        <div><p class="eyebrow">YOUR EVERYDAY HUB</p><h1>Good content, all in one place.</h1><p>Discover videos, music, quick entertainment, headlines and games.</p></div>
+        <span class="banner-art" aria-hidden="true">▶</span>
+      </div>
+
+      <section id="home" class="content-section" aria-labelledby="homeTitle">
+        <div class="section-heading"><div><p class="eyebrow">WATCH</p><h2 id="homeTitle">Home — Videos</h2></div><a class="text-link" href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer">Explore YouTube ↗</a></div>
+        <p class="section-intro">Video picks and shortcuts. Open a card to explore related videos on YouTube.</p>
+        <div class="content-grid" id="videoGrid"></div>
+      </section>
+
+      <section id="songs" class="content-section hidden" aria-labelledby="songsTitle">
+        <div class="section-heading"><div><p class="eyebrow">LISTEN</p><h2 id="songsTitle">Songs</h2></div><a class="text-link" href="https://www.boomplay.com/" target="_blank" rel="noopener noreferrer">Open Boomplay ↗</a></div>
+        <p class="section-intro">Find music on licensed services. MATE TUBE does not host or distribute audio.</p>
+        <div class="content-grid" id="songGrid"></div>
+      </section>
+
+      <section id="entertainment" class="content-section hidden" aria-labelledby="entertainmentTitle">
+        <div class="section-heading"><div><p class="eyebrow">QUICK WATCH</p><h2 id="entertainmentTitle">Entertainment</h2></div><a class="text-link" href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer">Explore TikTok ↗</a></div>
+        <p class="section-intro">Short-form video topics to explore. Respect creators’ rights and platform rules.</p>
+        <div class="content-grid short-grid" id="shortGrid"></div>
+      </section>
+
+      <section id="news" class="content-section hidden" aria-labelledby="newsTitle">
+        <div class="section-heading"><div><p class="eyebrow">STAY INFORMED</p><h2 id="newsTitle">News updates</h2></div></div>
+        <p class="section-intro">Choose a trusted publisher to see its latest coverage. Headlines require an external news feed or API to update automatically.</p>
+        <div class="content-grid" id="newsGrid"></div>
+      </section>
+
+      <section id="games" class="content-section hidden" aria-labelledby="gamesTitle">
+        <div class="section-heading"><div><p class="eyebrow">TAKE A BREAK</p><h2 id="gamesTitle">Games</h2></div></div>
+        <p class="section-intro">Play a quick built-in challenge, or browse free games from the links below.</p>
+        <div class="card game-card" id="quizCard">
+          <div class="game-icon">🧠</div><div class="game-copy"><h3>Quick quiz</h3><p id="quizQuestion">Which planet is known as the Red Planet?</p><div class="quiz-options" id="quizOptions"></div><p class="game-feedback" id="quizFeedback" aria-live="polite"></p></div>
+        </div>
+        <div class="content-grid" id="gameGrid"></div>
+      </section>
+
+      <section id="pinned" class="content-section hidden" aria-labelledby="pinnedTitle">
+        <div class="section-heading"><div><p class="eyebrow">USEFUL & TRUSTED</p><h2 id="pinnedTitle">Pinned apps & sites</h2></div></div>
+        <p class="section-intro">A few useful starting points. External sites have their own terms and privacy policies.</p>
+        <div class="content-grid" id="pinnedGrid"></div>
+      </section>
+
+      <section id="me" class="content-section hidden" aria-labelledby="meTitle">
+        <div class="section-heading"><div><p class="eyebrow">YOUR PROFILE</p><h2 id="meTitle">My account</h2></div></div>
+        <div class="account-grid">
+          <div class="card account-card">
+            <h3>Create a local profile</h3>
+            <p class="muted">This demo saves your name and email only in this browser. It is not a secure online account system.</p>
+            <form id="accountForm">
+              <label for="username">Name</label><input id="username" name="username" autocomplete="name" required maxlength="40" placeholder="Your name">
+              <label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required placeholder="you@example.com">
+              <button class="primary-button" type="submit">Save profile</button>
+            </form>
+            <p class="form-message" id="accountMessage" aria-live="polite"></p>
+            <button class="text-button hidden" type="button" id="clearProfile">Remove saved profile</button>
+          </div>
+          <div class="card earnings-card">
+            <p class="eyebrow">CREATOR MONETIZATION</p><h3>Ways to earn — and how to start</h3>
+            <p class="muted">MATE TUBE cannot connect to your bank, wallet, or ad account. Apply directly with each service, meet its eligibility rules, and add payout details only on its official site.</p>
+            <ol class="steps-list">
+              <li><a href="https://www.youtube.com/creators/partner-program/" target="_blank" rel="noopener noreferrer">YouTube Partner Program</a><span>Publish original videos, meet current eligibility requirements, apply in YouTube Studio, then set up AdSense for YouTube payouts.</span></li>
+              <li><a href="https://www.tiktok.com/creator-academy/" target="_blank" rel="noopener noreferrer">TikTok Creator Academy</a><span>Review creator monetization options and regional eligibility in TikTok’s official resources.</span></li>
+              <li><a href="https://www.boomplay.com/creators" target="_blank" rel="noopener noreferrer">Boomplay for artists</a><span>Use the official creator/artist resources to distribute music you own or are licensed to publish.</span></li>
+              <li><a href="https://adsense.google.com/start/" target="_blank" rel="noopener noreferrer">Google AdSense</a><span>For an eligible website, review policies, apply, and connect a verified payout method through Google.</span></li>
+              <li><a href="https://support.google.com/adsense/answer/1709858" target="_blank" rel="noopener noreferrer">AdSense eligibility and policies</a><span>Check site quality, original-content, age, and country requirements before applying.</span></li>
+            </ol>
+            <p class="security-note">Never share passwords, banking credentials, or verification codes here. This front-end demo does not process payments or provide backend authentication.</p>
+          </div>
+          <div class="card publish-card">
+            <p class="eyebrow">PUT IT ONLINE</p><h3>Publish this website</h3>
+            <ol class="steps-list">
+              <li><span>Prepare the website files (index.html, styles.css and script.js) and upload them to a repository you control.</span></li>
+              <li><a href="https://pages.github.com/" target="_blank" rel="noopener noreferrer">GitHub Pages</a><span>Follow GitHub’s official Pages guide to publish a static site from your repository. A custom domain is optional.</span></li>
+              <li><a href="https://docs.netlify.com/site-deploys/create-deploys/" target="_blank" rel="noopener noreferrer">Netlify deployment guide</a><span>Alternatively, follow the official guide to deploy your static site and connect a domain.</span></li>
+              <li><span>Test the published HTTPS link on phones, tablets and desktop. For real sign-in, news feeds, uploads, or payments, add a secure backend and follow the provider’s terms and privacy requirements.</span></li>
+            </ol>
+          </div>
+        </div>
+      </section>
+      <p id="searchStatus" class="search-status" aria-live="polite"></p>
+      <footer class="site-footer">MATE TUBE is a discovery hub, not an official YouTube, TikTok, Boomplay, or news publisher service.</footer>
+    </main>
+  </div>
+
+  <nav class="mobile-nav" aria-label="Mobile navigation">
+    <button class="nav-button active" data-tab="home"><span>⌂</span>Home</button>
+    <button class="nav-button" data-tab="songs"><span>♫</span>Songs</button>
+    <button class="nav-button" data-tab="entertainment"><span>▶</span>Fun</button>
+    <button class="nav-button" data-tab="news"><span>▤</span>News</button>
+    <button class="nav-button" data-tab="games"><span>♧</span>Games</button>
+    <button class="nav-button" data-tab="me"><span>☺</span>Me</button>
+  </nav>
+</body>
+</html>
