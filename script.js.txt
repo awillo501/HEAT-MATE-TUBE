@@ -1,0 +1,232 @@
+
+const sections = [...document.querySelectorAll("main .content-section")];
+const navButtons = [...document.querySelectorAll("[data-tab]")];
+const searchInput = document.getElementById("globalSearch");
+const searchStatus = document.getElementById("searchStatus");
+let activeTab = "home";
+let activeQuery = "";
+
+const catalogs = {
+  videoGrid: [
+    { title: "Technology & reviews", detail: "Discover new gadgets and explainers", icon: "💻", colors: ["#37489c", "#833f94"], url: "https://www.youtube.com/results?search_query=technology+reviews", tag: "Video" },
+    { title: "Football highlights", detail: "Match moments and sports stories", icon: "⚽", colors: ["#157b76", "#345b9c"], url: "https://www.youtube.com/results?search_query=football+highlights", tag: "Sports" },
+    { title: "Cooking ideas", detail: "Recipes and kitchen inspiration", icon: "🍜", colors: ["#ba5a3d", "#9a355f"], url: "https://www.youtube.com/results?search_query=easy+cooking+recipes", tag: "Food" },
+    { title: "Travel & places", detail: "Explore destinations around the world", icon: "🌍", colors: ["#187d91", "#4655a4"], url: "https://www.youtube.com/results?search_query=travel+destinations", tag: "Travel" }
+  ],
+  songGrid: [
+    { title: "Afrobeats", detail: "Explore new Afrobeats releases", icon: "🎧", colors: ["#ba4773", "#703d9c"], url: "https://www.boomplay.com/search/Afrobeats", tag: "Boomplay" },
+    { title: "Gospel music", detail: "Find gospel artists and playlists", icon: "🎙️", colors: ["#4755a1", "#347f91"], url: "https://www.boomplay.com/search/Gospel", tag: "Boomplay" },
+    { title: "Hip-hop", detail: "Browse hip-hop tracks and mixes", icon: "🎵", colors: ["#b15934", "#813b66"], url: "https://www.boomplay.com/search/Hip-hop", tag: "Boomplay" },
+    { title: "Amapiano", detail: "Listen to Amapiano selections", icon: "🥁", colors: ["#287860", "#527249"], url: "https://www.boomplay.com/search/Amapiano", tag: "Boomplay" }
+  ],
+  shortGrid: [
+    { title: "Comedy clips", detail: "Quick laughs and sketch ideas", icon: "😂", colors: ["#c34855", "#7948a1"], url: "https://www.tiktok.com/search?q=comedy", tag: "TikTok" },
+    { title: "Dance & music", detail: "Choreography and music trends", icon: "💃", colors: ["#a13f83", "#5146a0"], url: "https://www.tiktok.com/search?q=dance", tag: "TikTok" },
+    { title: "DIY & creativity", detail: "Creative projects and how-tos", icon: "🎨", colors: ["#c07038", "#a34469"], url: "https://www.tiktok.com/search?q=DIY", tag: "TikTok" },
+    { title: "Sports moments", detail: "Skills, highlights and reactions", icon: "🏀", colors: ["#1a8492", "#3d589e"], url: "https://www.tiktok.com/search?q=sports", tag: "TikTok" }
+  ],
+  newsGrid: [
+    { title: "BBC News", detail: "International reporting and analysis", icon: "🌐", colors: ["#b83d4b", "#643c7c"], url: "https://www.bbc.com/news", tag: "World" },
+    { title: "Reuters", detail: "Global news from an international agency", icon: "📰", colors: ["#347482", "#394b82"], url: "https://www.reuters.com/", tag: "World" },
+    { title: "Associated Press", detail: "News from around the world", icon: "📡", colors: ["#5c548e", "#344d78"], url: "https://apnews.com/", tag: "World" },
+    { title: "Al Jazeera", detail: "International news and current affairs", icon: "🗞️", colors: ["#9a6535", "#6b477a"], url: "https://www.aljazeera.com/", tag: "World" }
+  ],
+  gameGrid: [
+    { title: "Khan Academy", detail: "Learn with free lessons and activities", icon: "📚", colors: ["#278675", "#316399"], url: "https://www.khanacademy.org/", tag: "Learn & play" },
+    { title: "Chess.com", detail: "Play chess and solve puzzles", icon: "♟️", colors: ["#557e54", "#36616b"], url: "https://www.chess.com/", tag: "Strategy" },
+    { title: "Poki", detail: "Browse free browser games", icon: "🕹️", colors: ["#a84973", "#674da4"], url: "https://poki.com/", tag: "Arcade" },
+    { title: "itch.io games", detail: "Discover independent games", icon: "🎮", colors: ["#ae5039", "#753e62"], url: "https://itch.io/games/free", tag: "Indie" }
+  ],
+  pinnedGrid: [
+    { title: "Wikipedia", detail: "Free encyclopedia", icon: "📖", colors: ["#475361", "#333d4c"], url: "https://www.wikipedia.org/", tag: "Reference" },
+    { title: "Khan Academy", detail: "Free learning resources", icon: "🎓", colors: ["#24796d", "#3d5f81"], url: "https://www.khanacademy.org/", tag: "Learning" },
+    { title: "MDN Web Docs", detail: "Trusted web development reference", icon: "🧑‍💻", colors: ["#5a4c89", "#354771"], url: "https://developer.mozilla.org/", tag: "Technology" },
+    { title: "Google", detail: "Search the web", icon: "🔎", colors: ["#3b6a9d", "#4c508c"], url: "https://www.google.com/", tag: "Search" }
+  ]
+};
+
+function createCard(item) {
+  const card = document.createElement("article");
+  card.className = "card media-card";
+  const link = document.createElement("a");
+  link.className = "card-link";
+  link.href = item.url;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  link.setAttribute("aria-label", `${item.title}: ${item.detail} (opens in a new tab)`);
+
+  const thumb = document.createElement("div");
+  thumb.className = "thumb";
+  thumb.style.setProperty("--tone-a", item.colors[0]);
+  thumb.style.setProperty("--tone-b", item.colors[1]);
+  const icon = document.createElement("span");
+  icon.className = "thumb-icon";
+  icon.setAttribute("aria-hidden", "true");
+  icon.textContent = item.icon;
+  thumb.append(icon);
+
+  const info = document.createElement("div");
+  info.className = "card-info";
+  const title = document.createElement("h3");
+  title.textContent = item.title;
+  const detail = document.createElement("p");
+  detail.textContent = item.detail;
+  const tag = document.createElement("span");
+  tag.className = "pill";
+  tag.textContent = item.tag;
+  info.append(title, detail, tag);
+  link.append(thumb, info);
+  card.append(link);
+  return card;
+}
+
+Object.entries(catalogs).forEach(([elementId, items]) => {
+  const grid = document.getElementById(elementId);
+  items.forEach(item => grid.append(createCard(item)));
+});
+
+function showTab(id) {
+  if (!document.getElementById(id)) return;
+  activeTab = id;
+  searchInput.value = "";
+  activeQuery = "";
+  sections.forEach(section => section.classList.toggle("hidden", section.id !== id));
+  navButtons.forEach(button => {
+    const selected = button.dataset.tab === id;
+    button.classList.toggle("active", selected);
+    if (selected) button.setAttribute("aria-current", "page");
+    else button.removeAttribute("aria-current");
+  });
+  applySearch();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+navButtons.forEach(button => button.addEventListener("click", () => showTab(button.dataset.tab)));
+
+document.getElementById("searchForm").addEventListener("submit", event => {
+  event.preventDefault();
+  activeQuery = searchInput.value.trim().toLocaleLowerCase();
+  applySearch();
+});
+searchInput.addEventListener("input", () => {
+  activeQuery = searchInput.value.trim().toLocaleLowerCase();
+  applySearch();
+});
+
+function applySearch() {
+  if (!activeQuery) {
+    sections.forEach(section => {
+      section.classList.toggle("hidden", section.id !== activeTab);
+      section.querySelectorAll(".media-card").forEach(card => card.classList.remove("hidden"));
+      section.querySelector(".game-card")?.classList.remove("hidden");
+    });
+    searchStatus.textContent = "";
+    return;
+  }
+
+  let totalMatches = 0;
+  let matchingSections = 0;
+  sections.forEach(section => {
+    let sectionMatches = 0;
+    section.querySelectorAll(".media-card").forEach(card => {
+      const match = card.textContent.toLocaleLowerCase().includes(activeQuery);
+      card.classList.toggle("hidden", !match);
+      if (match) sectionMatches++;
+    });
+    const quiz = section.querySelector(".game-card");
+    if (quiz) {
+      const match = quiz.textContent.toLocaleLowerCase().includes(activeQuery);
+      quiz.classList.toggle("hidden", !match);
+      if (match) sectionMatches++;
+    }
+    section.classList.toggle("hidden", sectionMatches === 0);
+    totalMatches += sectionMatches;
+    if (sectionMatches) matchingSections++;
+  });
+  searchStatus.textContent = totalMatches
+    ? `${totalMatches} matching result${totalMatches === 1 ? "" : "s"} across ${matchingSections} section${matchingSections === 1 ? "" : "s"}.`
+    : "No matching results. Try another search.";
+}
+
+const accountForm = document.getElementById("accountForm");
+const accountMessage = document.getElementById("accountMessage");
+const clearProfile = document.getElementById("clearProfile");
+const profileKey = "omnihub_profile";
+
+function showSavedProfile() {
+  try {
+    const profile = JSON.parse(localStorage.getItem(profileKey) || "null");
+    if (!profile || typeof profile.name !== "string" || typeof profile.email !== "string") return;
+    document.getElementById("username").value = profile.name;
+    document.getElementById("email").value = profile.email;
+    accountMessage.textContent = `Profile saved on this device for ${profile.name}.`;
+    clearProfile.classList.remove("hidden");
+  } catch {
+    accountMessage.textContent = "Saved profile could not be read in this browser.";
+  }
+}
+
+accountForm.addEventListener("submit", event => {
+  event.preventDefault();
+  if (!accountForm.reportValidity()) return;
+  const profile = {
+    name: document.getElementById("username").value.trim(),
+    email: document.getElementById("email").value.trim()
+  };
+  if (!profile.name || !profile.email) {
+    accountMessage.textContent = "Enter your name and a valid email address.";
+    return;
+  }
+  try {
+    localStorage.setItem(profileKey, JSON.stringify(profile));
+    accountMessage.textContent = "Profile saved on this device. This is not an online account.";
+    clearProfile.classList.remove("hidden");
+  } catch {
+    accountMessage.textContent = "Could not save the profile. Browser storage may be unavailable.";
+  }
+});
+
+clearProfile.addEventListener("click", () => {
+  try {
+    localStorage.removeItem(profileKey);
+    accountForm.reset();
+    accountMessage.textContent = "Saved profile removed from this device.";
+    clearProfile.classList.add("hidden");
+  } catch {
+    accountMessage.textContent = "Could not remove the saved profile.";
+  }
+});
+showSavedProfile();
+
+const quizQuestions = [
+  { question: "Which planet is known as the Red Planet?", options: ["Venus", "Mars", "Jupiter"], answer: "Mars" },
+  { question: "How many sides does a hexagon have?", options: ["Five", "Six", "Eight"], answer: "Six" },
+  { question: "Which is the largest ocean on Earth?", options: ["Atlantic", "Indian", "Pacific"], answer: "Pacific" }
+];
+let quizIndex = 0;
+function renderQuestion() {
+  const question = quizQuestions[quizIndex];
+  document.getElementById("quizQuestion").textContent = question.question;
+  document.getElementById("quizFeedback").textContent = "";
+  const options = document.getElementById("quizOptions");
+  options.replaceChildren();
+  question.options.forEach(option => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = option;
+    button.addEventListener("click", () => {
+      const feedback = document.getElementById("quizFeedback");
+      if (option === question.answer) {
+        feedback.textContent = "Correct! Loading the next question…";
+        window.setTimeout(() => {
+          quizIndex = (quizIndex + 1) % quizQuestions.length;
+          renderQuestion();
+        }, 900);
+      } else {
+        feedback.textContent = "Not quite — try another answer.";
+      }
+    });
+    options.append(button);
+  });
+}
+renderQuestion();
